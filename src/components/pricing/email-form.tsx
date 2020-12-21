@@ -2,6 +2,7 @@ import stripeCheckoutRedirect from 'api/stripe/stripe-checkout-redirect'
 import {Formik} from 'formik'
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
+import {track} from 'utils/analytics'
 import axios from 'utils/configured-axios'
 import * as yup from 'yup'
 
@@ -19,19 +20,21 @@ const EmailForm: React.FunctionComponent<EmailFormProps> = ({priceId}) => {
 
   const validateEmail = async (email: string) => {
     setIsSubmitted(true)
-    const isPro = await axios
+    const {hasProAccess, stripeCustomerId} = await axios
       .post(`/api/users/check-pro-status`, {
         email,
       })
       .then(({data}) => data)
 
-    if (isPro) {
+    if (hasProAccess) {
       setIsError(
         `You've already got a pro account at ${email}. [Please login](/login).`,
       )
     } else {
       setIsError(false)
-      stripeCheckoutRedirect(priceId, email)
+      track('checkout: redirect to stripe', {priceId}).then(() =>
+        stripeCheckoutRedirect(priceId, email, stripeCustomerId),
+      )
     }
   }
 
@@ -54,7 +57,10 @@ const EmailForm: React.FunctionComponent<EmailFormProps> = ({priceId}) => {
               <Formik
                 initialValues={{email: ''}}
                 validationSchema={loginSchema}
-                onSubmit={(values) => validateEmail(values.email)}
+                onSubmit={(values) => {
+                  track('checkout: submitted email', {email: values.email})
+                  validateEmail(values.email)
+                }}
               >
                 {(props) => {
                   const {
@@ -102,10 +108,9 @@ const EmailForm: React.FunctionComponent<EmailFormProps> = ({priceId}) => {
                 }}
               </Formik>
             )}
-            {isSubmitted && (
+            {isSubmitted && !isError && (
               <div className="text-text">
                 <p>Redirecting to Stripe payments.</p>
-          
               </div>
             )}
             {isError && (

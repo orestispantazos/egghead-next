@@ -17,6 +17,19 @@ export const ACCESS_TOKEN_KEY = 'eh_token_2020_11_22'
 export const EXPIRES_AT_KEY = 'eh_token_expiration'
 export const VIEWING_AS_USER_KEY = 'eh_viewing_as_user_2020_11_22'
 
+type AuthorizationHeader = {
+  Authorization: string
+}
+
+export const getAuthorizationHeader = () => {
+  const token = getAccessTokenFromCookie()
+  const authorizationHeader: AuthorizationHeader = token && {
+    Authorization: `Bearer ${token}`,
+  }
+
+  return authorizationHeader
+}
+
 export function getTokenFromCookieHeaders(serverCookies = '') {
   const parsedCookie = serverCookie.parse(serverCookies)
   const eggheadToken = parsedCookie[ACCESS_TOKEN_KEY] || ''
@@ -127,9 +140,8 @@ export default class Auth {
   handleNewSession(accessToken: string, expiresInSeconds: string) {
     return new Promise((resolve, reject) => {
       this.setSession(accessToken, expiresInSeconds).then(
-        (user) => {
+        (user: any) => {
           identify(user)
-          track('authentication success')
           resolve(user)
         },
         (error) => {
@@ -208,6 +220,7 @@ export default class Auth {
       http
         .get(`/api/users/current?minimal=${minimalUser}`, {})
         .then(({data}) => {
+          if (data) identify(data)
           localStorage.setItem(USER_KEY, JSON.stringify(data))
           resolve(data)
         })

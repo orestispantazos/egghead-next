@@ -1,16 +1,6 @@
-import {useViewer} from 'context/viewer-context'
 import * as React from 'react'
 
-type SelectPlanProps = {
-  price: number
-  onClickCheckout: React.MouseEventHandler
-}
-
-const SelectPlan: React.FunctionComponent<SelectPlanProps> = ({
-  price,
-  onClickCheckout,
-}) => {
-  const {viewer, loading} = useViewer()
+const SelectPlan: React.FunctionComponent = ({children}) => {
   return (
     <div className="mt-8 bg-white pb-16 sm:mt-12 sm:pb-20 lg:pb-28">
       <div className="relative">
@@ -74,35 +64,7 @@ const SelectPlan: React.FunctionComponent<SelectPlanProps> = ({
                 </ul>
               </div>
             </div>
-            <div className="py-8 px-6 text-center bg-gray-50 lg:flex-shrink-0 lg:flex lg:flex-col lg:justify-center lg:p-12">
-              <p className="text-lg leading-6 font-medium text-gray-900">
-                One low price...
-              </p>
-              <div className="mt-4 flex items-center justify-center text-5xl leading-none font-extrabold text-gray-900">
-                <span>${price}</span>
-                <span className="ml-3 text-base leading-7 font-medium text-gray-500">
-                  USD
-                </span>
-              </div>
-
-              <div className="mt-6">
-                <div className="rounded-md shadow">
-                  <button
-                    onClick={onClickCheckout}
-                    disabled={viewer?.is_pro}
-                    className={`${
-                      loading || viewer?.is_pro ? 'opacity-40' : 'opacity-100'
-                    } w-full flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out`}
-                  >
-                    {!loading
-                      ? viewer?.is_pro
-                        ? `Already a Member!`
-                        : `Get Access`
-                      : '--'}
-                  </button>
-                </div>
-              </div>
-            </div>
+            {children}
           </div>
         </div>
       </div>
