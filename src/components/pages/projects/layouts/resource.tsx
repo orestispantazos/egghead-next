@@ -8,6 +8,9 @@ import Image from 'next/image'
 import {Element, scroller} from 'react-scroll'
 import Link from 'next/link'
 import {useRouter} from 'next/router'
+import fetcher from 'utils/fetcher'
+import useSWR from 'swr'
+import {useEnhancedTranscript} from 'hooks/use-enhanced-transcript'
 
 type ResourceLayoutProps = {
   children: React.ReactElement | React.ReactElement[]
@@ -23,7 +26,14 @@ const ResourceLayout: FunctionComponent<ResourceLayoutProps> = ({
   const router = useRouter()
   const playerRef = React.useRef<any>(null)
   const [isPlaying, setPlaying] = React.useState<boolean>(false)
-
+  const endpoint =
+    meta.lesson_slug &&
+    `${process.env.NEXT_PUBLIC_AUTH_DOMAIN}/api/v1/lessons/${meta.lesson_slug}`
+  const {data} = useSWR(endpoint, fetcher)
+  console.log(data)
+  const enhancedTranscript = useEnhancedTranscript(data && data.transcript_url)
+  const transcriptAvailable = (data && data.transcript) || enhancedTranscript
+  console.log({transcriptAvailable})
   const SeekToButton = (props: any) => {
     const match = props.href.match(
       /[0-9]:[0-9][0-9]|[0-9]{2}:[0-9][0-9]|[[0-9]{2}:[0-9][0-9]]|[[0-9]{3}:[0-9][0-9]]/g, // https://regexr.com/58bnr
@@ -134,7 +144,7 @@ const ResourceLayout: FunctionComponent<ResourceLayoutProps> = ({
                 >
                   {children}
                 </MDXProvider>
-                {meta.transcript || meta.transcript_url ? (
+                {transcriptAvailable && (
                   <>
                     <hr className="border-none h-px bg-gray-200" />
                     <h4 className="font-semibold text-xl">Transcript</h4>
@@ -143,11 +153,11 @@ const ResourceLayout: FunctionComponent<ResourceLayoutProps> = ({
                       className="prose sm:prose-lg max-w-none"
                       player={playerRef}
                       playerAvailable={true}
-                      enhancedTranscript={meta.transcrpt_url}
-                      initialTranscript={meta.transcript}
+                      enhancedTranscript={enhancedTranscript}
+                      initialTranscript={data.transcript}
                     />
                   </>
-                ) : null}
+                )}
               </div>
             </div>
             <aside className="relative col-span-4 flex flex-col space-y-8">
@@ -176,20 +186,22 @@ const ResourceLayout: FunctionComponent<ResourceLayoutProps> = ({
                     </a>
                   </Link>
                 )}
-                <Link href="/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout">
-                  <a className="flex items-center space-x-3">
-                    <Image
-                      src="https://res.cloudinary.com/dg3gyk0gu/image/upload/v1608034857/next.egghead.io/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-an-ecommerce-store-with-next-js-and-stripe-checkout_1.png"
-                      width={80}
-                      height={80}
-                      quality={100}
-                      alt="illustration by Kamil Khadeyev"
-                    />
-                    <div className="leading-tight font-semibold">
-                      Create an eCommerce Store with Next.js and Stripe Checkout
-                    </div>
-                  </a>
-                </Link>
+                {meta.project && (
+                  <Link href={meta.project.path}>
+                    <a className="flex items-center space-x-3">
+                      <Image
+                        src={meta.project.image}
+                        width={80}
+                        height={80}
+                        quality={100}
+                        alt={`illustration for ${meta.project.title}`}
+                      />
+                      <div className="leading-tight font-semibold">
+                        {meta.project.title}
+                      </div>
+                    </a>
+                  </Link>
+                )}
                 <ul className="rounded-lg divide-gray-100 divide-y-2">
                   {resources.map((r, i) => (
                     <li
@@ -260,7 +272,7 @@ const resources = [
   {
     title: 'Create a New React Application with Next.js',
     path:
-      '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-a-new-react-application-with-next-js',
+      '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-a-new-react-application-with-next-js/exercise',
     slug: 'create-a-new-react-application-with-next-js',
     code:
       'https://github.com/colbyfayock/space-jelly-store-workshop/tree/main/lessons/01%20-%20Create%20a%20New%20React%20Application%20with%20Next.js',
@@ -268,8 +280,8 @@ const resources = [
       {
         title: 'Exercise',
         path:
-          '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-a-new-react-application-with-next-js/intro',
-        slug: 'intro',
+          '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-a-new-react-application-with-next-js/exercise',
+        slug: 'exercise',
       },
       {
         title: 'Solution',
@@ -284,8 +296,28 @@ const resources = [
       'Add and Style a Grid of Products with Images in a Next.js React App',
     slug: 'add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app',
     path:
-      '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app',
+      '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app/exercise',
     code: '',
+    resources: [
+      {
+        title: 'Exercise',
+        path:
+          '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app/exercise',
+        slug: 'exercise',
+      },
+      {
+        title: 'Solution',
+        path:
+          '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app/solution',
+        slug: 'solution',
+      },
+      {
+        title: 'Extra Credit',
+        path:
+          '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app/extra-credit',
+        slug: 'solution',
+      },
+    ],
   },
   {
     title:

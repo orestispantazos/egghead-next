@@ -1,7 +1,13 @@
 export const meta = {
   title: `Create a New React Application with Next.js`,
-  transcript: `Colby Fayock: [0:00] To get started with a Next.js app, we can type yarn create next-app. Let's call this my-ecom-store. Once it's finished creating the app and installing the dependencies, we can cd into that directory, and we can run yarn dev, which is going to start up our development server.\n\n[0:14] When we're ready, we can open up the address at localhost:3000. Once that loads, we can see that we're immediately Welcome to a new Next.js app.\n\n[0:20] Before we move on, let's open this in our favorite text editor, so we can see what's going on. We get a few things by default with the Next.js app. First, we get the pages directory which includes API, which we're not going to use for this, but you can create Lambda functions. We also get an index.js which is our home page and an _app.js that wraps our entire application.\n\n[0:37] If we look inside of our index.js file, we can see that we get a few things by default. We get a Head component, which is going to show us our title of the page. Then, we have a main that wraps the entire page with an h1 that tells us Welcome to the Next.js App, along with the description, and a few cards that link to documentation.\n\n[0:52] We can also see that we have a styles directory which includes some global styles as well as a Home.module.css file that include some styles that are specific to the home page.\n\n[1:01] Our public directory is where we can put files where we want accessible directly and statically from our application. For example, if we want to access the vercel.svg file, we can access that with our server at /vercel.svg.\n\n[1:13] Inside of our home page, we can see that we're already doing just that. With all these files together, we get our new Next.js App.\n`,
-  transcript_url: `https://egghead.io/api/v1/lessons/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli/transcript`,
+  project: {
+    title: 'Create an eCommerce Store with Next.js and Stripe Checkout',
+    image:
+      'https://res.cloudinary.com/dg3gyk0gu/image/upload/v1608034857/next.egghead.io/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/create-an-ecommerce-store-with-next-js-and-stripe-checkout_1.png',
+    path:
+      '/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout',
+  },
+  lesson_slug: `next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli`,
   media_urls: {
     hls_url:
       'https://d2c5owlt6rorc3.cloudfront.net/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli-qtgBZ7pkE/hls/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli-qtgBZ7pkE.m3u8',
@@ -33,7 +39,7 @@ Update the page title (`<h1>`) and description (`<p>`) at the top of the page to
 
 - `pages/index.js`
 
-import ResourceLayout from 'components/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/layouts/resource'
+import ResourceLayout from 'components/pages/projects/layouts/resource'
 
 export const Sidebar = () => <div />
 

@@ -237,12 +237,6 @@ const Part: FunctionComponent<{
 }> = ({part: {title, body, image, lessons}, idx, isLast = false}) => {
   const index = idx + 1
   const gap = isLast ? 'md:pb-24 pb-10' : 'pb-10'
-  const FlagIcon = () => {
-    return (
-      //prettier-ignore
-      <svg width="14" height="14" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><g fill="none" ><path fillRule="evenodd" clipRule="evenodd" d="M3 6a3 3 0 0 1 3-3h10a1 1 0 0 1 .8 1.6L14.25 8l2.55 3.4A1 1 0 0 1 16 13H6a1 1 0 0 0-1 1v3a1 1 0 1 1-2 0V6z" fill="currentColor"/></g></svg>
-    )
-  }
   const Thumbnail = () => {
     return image ? (
       <div className="overflow-hidden flex">
@@ -278,11 +272,6 @@ const Part: FunctionComponent<{
           <small>{index}</small>
         </div>
         <div className="border-r-2 border-gray-200 h-full" />
-        {/* {isLast && (
-              <div className="flex items-center justify-center text-center text-xs bg-blue-100 text-blue-500 font-semibold w-10 h-10 transform translate-y-10 absolute bottom-0 rounded-full border-none border-gray-200 flex-shrink-0">
-                <FlagIcon />
-              </div>
-            )} */}
       </div>
       <div className={`md:w-full ${gap}`}>
         <h3 className="text-lg font-bold relative transform -translate-y-1 pb-1">
