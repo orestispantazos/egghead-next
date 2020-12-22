@@ -6,29 +6,32 @@ import Markdown from 'react-markdown'
 import Eggo from '../../../images/eggo.svg'
 import removeMarkdown from 'remove-markdown'
 import {NextSeo} from 'next-seo'
-import data from './data'
+import {ProjectProps} from './data'
 
-type ProjectProps = {
-  course: any
-  dependencies: any
-}
-
-const Project: FunctionComponent<ProjectProps> = () => {
+const Project: FunctionComponent<ProjectProps> = ({
+  title,
+  summary,
+  instructor,
+  image,
+  tags,
+  items,
+  podcast,
+}) => {
   return (
     <>
       <NextSeo
-        description={removeMarkdown(data.summary)}
-        title={data.title}
+        description={removeMarkdown(summary)}
+        title={title}
         titleTemplate={'%s | egghead.io'}
         twitter={{
-          handle: data.instructor.twitter,
+          handle: instructor.twitter,
           site: `@eggheadio`,
           cardType: 'summary_large_image',
         }}
         openGraph={{
-          title: data.title,
+          title: title,
           // url: http_url,
-          description: removeMarkdown(data.summary),
+          description: removeMarkdown(summary),
           site_name: 'egghead',
           images: [
             {
@@ -44,8 +47,8 @@ const Project: FunctionComponent<ProjectProps> = () => {
             <div className="flex md:flex-row flex-col md:space-x-10 md:space-y-0 space-y-6 items-center md:pb-16 pb-8 md:pt-8 pt-4 max-w-screen-lg mx-auto">
               <div className="flex-shrink-0 mt-8">
                 <Image
-                  src={data.image}
-                  alt={data.title}
+                  src={image}
+                  alt={title}
                   width={288}
                   height={288}
                   quality={100}
@@ -56,16 +59,16 @@ const Project: FunctionComponent<ProjectProps> = () => {
                   Portfolio Project
                 </div>
                 <h1 className="md:text-3xl text-3xl md:text-left text-center font-bold tracking-tight leading-tight pb-6 max-w-screen-sm">
-                  {data.title}
+                  {title}
                 </h1>
-                <Tags tags={data.tags} />
+                <Tags tags={tags} />
               </div>
             </div>
           </header>
           <main>
             <Markdown
               className="prose prose-lg md:prose-xl max-w-screen-md mx-auto"
-              source={data.summary}
+              source={summary}
             />
             <div className="mt-20 bg-gray-50 -mx-5 pt-24 xl:px-0 px-5">
               <div className="max-w-screen-lg mx-auto">
@@ -75,9 +78,9 @@ const Project: FunctionComponent<ProjectProps> = () => {
                 <h2 className="sm:text-2xl text-3xl sm:text-left font-semibold text-center leading-tighter pb-12">
                   How to build a start-to-finish dynamic Next.js app
                 </h2>
-                {data.resources.map((part, idx) => {
-                  const isLast = idx === data.resources.length - 1
-                  return <Part part={part} idx={idx} isLast={isLast} />
+                {items.map((item, idx) => {
+                  const isLast = idx === items.length - 1
+                  return <Playlist playlist={item} idx={idx} isLast={isLast} />
                 })}
               </div>
             </div>
@@ -136,8 +139,8 @@ const Project: FunctionComponent<ProjectProps> = () => {
           </main>
         </article>
         <div className="w-full mx-auto max-w-screen-lg items-center grid md:grid-cols-2 lg:gap-40 md:gap-24 gap-5">
-          <Instructor instructor={data.instructor} />
-          {data.podcast.id && (
+          <Instructor instructor={instructor} />
+          {podcast?.id && (
             <div>
               <h3 className="text-lg font-semibold mb-2 md:text-left text-center">
                 Listen to Colby tell you about this project
@@ -148,7 +151,7 @@ const Project: FunctionComponent<ProjectProps> = () => {
                 frameBorder="no"
                 scrolling="no"
                 seamless
-                src={`https://player.simplecast.com/${data.podcast.id}?dark=false`}
+                src={`https://player.simplecast.com/${podcast.id}?dark=false`}
               />
             </div>
           )}
@@ -225,16 +228,11 @@ const Tags: FunctionComponent<{
   )
 }
 
-const Part: FunctionComponent<{
-  part: {
-    title: string
-    body?: string
-    image: string
-    lessons?: {title: string; path: string}[]
-  }
-  idx: number
-  isLast: boolean
-}> = ({part: {title, body, image, lessons}, idx, isLast = false}) => {
+const Playlist: FunctionComponent<any> = ({
+  playlist: {title, summary, image, items},
+  idx,
+  isLast = false,
+}) => {
   const index = idx + 1
   const gap = isLast ? 'md:pb-24 pb-10' : 'pb-10'
   const Thumbnail = () => {
@@ -257,8 +255,8 @@ const Part: FunctionComponent<{
         className={`space-y-2 flex flex-col md:items-end items-center py-1 ${gap}`}
       >
         {/* <div className="uppercase font-semibold text-sm text-blue-500">Part {index}</div> */}
-        {lessons ? (
-          <Link href={lessons[0].path}>
+        {items ? (
+          <Link href={items[0].path}>
             <a>
               <Thumbnail />
             </a>
@@ -277,10 +275,10 @@ const Part: FunctionComponent<{
         <h3 className="text-lg font-bold relative transform -translate-y-1 pb-1">
           {title}
         </h3>
-        {body && <Markdown className="prose" source={body} />}
-        {lessons && (
+        {summary && <Markdown className="prose" source={summary} />}
+        {items && (
           <ul>
-            {lessons.map((l) => (
+            {items.map((l: any) => (
               <li>
                 {l.path ? (
                   <Link href={l.path}>
