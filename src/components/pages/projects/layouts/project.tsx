@@ -6,7 +6,7 @@ import Markdown from 'react-markdown'
 import Eggo from '../../../images/eggo.svg'
 import removeMarkdown from 'remove-markdown'
 import {NextSeo} from 'next-seo'
-import {ProjectProps} from './data'
+import {ProjectProps} from '../data'
 
 const Project: FunctionComponent<ProjectProps> = ({
   title,
@@ -78,7 +78,7 @@ const Project: FunctionComponent<ProjectProps> = ({
                 <h2 className="sm:text-2xl text-3xl sm:text-left font-semibold text-center leading-tighter pb-12">
                   How to build a start-to-finish dynamic Next.js app
                 </h2>
-                {items.map((item, idx) => {
+                {items?.map((item, idx) => {
                   const isLast = idx === items.length - 1
                   return <Playlist playlist={item} idx={idx} isLast={isLast} />
                 })}
@@ -256,7 +256,7 @@ const Playlist: FunctionComponent<any> = ({
       >
         {/* <div className="uppercase font-semibold text-sm text-blue-500">Part {index}</div> */}
         {items ? (
-          <Link href={items[0].path}>
+          <Link href={items[0].slug}>
             <a>
               <Thumbnail />
             </a>

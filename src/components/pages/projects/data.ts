@@ -1,4 +1,4 @@
-type GenericResource = {
+export type GenericResourceProps = {
   type:
     | 'playlist'
     | 'video'
@@ -9,10 +9,30 @@ type GenericResource = {
     | 'external'
     | 'podcast'
   title: string
+  slug: string
+  lesson_slug?: string // weird but necessarry in order to distinguish between slug with -intro / -solution appendix to fetch lesson data
   path?: string
-  image: string
+  image?: string
   description?: string
-  items?: GenericResource[]
+  summary?: string
+  items?: GenericResourceProps[]
+  first_resource_path?: string
+  media_urls?: {
+    hls_url: string
+    dash_url: string
+  }
+  code?: {
+    label: string
+    github: {
+      repo: string
+      user: string
+      branch: string
+    }
+  }
+  next?: {
+    label: string
+    path: string
+  }
 }
 
 export type ProjectProps = {
@@ -30,7 +50,7 @@ export type ProjectProps = {
     image: string
   }
   tags: {title: string; image: string}[]
-  items?: GenericResource[]
+  items?: GenericResourceProps[]
 }
 
 const projects: ProjectProps[] = [
@@ -66,22 +86,49 @@ const projects: ProjectProps[] = [
       {
         type: 'playlist',
         title: 'Bootstrap a Next.js Ecommerce App',
+        slug: 'bootstrap-a-next-js-ecommerce-app',
         image:
           'https://res.cloudinary.com/dg3gyk0gu/image/upload/v1608205688/next.egghead.io/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/ecommerce-stripe-icon-2.png',
         items: [
           {
-            type: 'video',
+            type: 'playlist',
             title:
               'Create a New React Application with the Next.js create-next-app CLI',
-            path:
-              '/lessons/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
-            image:
-              'https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/074/square_280/nextjs.png',
+            slug:
+              'next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
+            items: [
+              {
+                type: 'text',
+                title: 'Exercise',
+                description: 'this is an exercise',
+                slug:
+                  'next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
+                path:
+                  '/lessons/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
+                image:
+                  'https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/074/square_280/nextjs.png',
+              },
+              {
+                type: 'video',
+                title: 'Solution',
+                lesson_slug:
+                  'next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
+                slug:
+                  'next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli-solution',
+                path:
+                  '/lessons/next-js-create-a-new-react-application-with-the-next-js-create-next-app-cli',
+                image:
+                  'https://d2eip9sf3oo6c2.cloudfront.net/tags/images/000/001/074/square_280/nextjs.png',
+              },
+            ],
           },
+
           {
             type: 'video',
             title:
               'Add and Style a Grid of Products with Images in a Next.js React App',
+            slug:
+              'next-js-add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app',
             path:
               '/lessons/next-js-add-and-style-a-grid-of-products-with-images-in-a-next-js-react-app',
             image:
@@ -91,6 +138,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Add and Configure Products in the Stripe Dashboard for an Online Store',
+            slug:
+              'next-js-add-and-configure-products-in-the-stripe-dashboard-for-an-online-store',
             path:
               '/lessons/next-js-add-and-configure-products-in-the-stripe-dashboard-for-an-online-store',
             image:
@@ -100,6 +149,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Dynamically Manage a Grid of Products in an Online Store with a JSON Document',
+            slug:
+              'javascript-dynamically-manage-a-grid-of-products-in-an-online-store-with-a-json-document',
             path:
               '/lessons/javascript-dynamically-manage-a-grid-of-products-in-an-online-store-with-a-json-document',
             image:
@@ -109,6 +160,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Host & Deploy a Next.js React App on Vercel imported from GitHub',
+            slug:
+              'next-js-host-deploy-a-next-js-react-app-on-vercel-imported-from-github',
             path:
               '/lessons/next-js-host-deploy-a-next-js-react-app-on-vercel-imported-from-github',
             image:
@@ -119,6 +172,7 @@ const projects: ProjectProps[] = [
       {
         type: 'playlist',
         title: 'Integrate Stripe Checkout into Next.js',
+        slug: 'integrate-stripe-checkout-into-next-js',
         image:
           'https://res.cloudinary.com/dg3gyk0gu/image/upload/v1608205688/next.egghead.io/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/ecommerce-stripe-icon-3.png',
         items: [
@@ -126,6 +180,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Configure a Stripe Checkout Domain for Client-Only Integration',
+            slug:
+              'stripe-configure-a-stripe-checkout-domain-for-client-only-integration',
             path:
               '/lessons/stripe-configure-a-stripe-checkout-domain-for-client-only-integration',
             image:
@@ -135,6 +191,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Add a Stripe API Key as an Environment Variable in Next.js & Vercel',
+            slug:
+              'next-js-add-a-stripe-api-key-as-an-environment-variable-in-next-js-vercel',
             path:
               '/lessons/next-js-add-a-stripe-api-key-as-an-environment-variable-in-next-js-vercel',
             image:
@@ -144,6 +202,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Integrate Stripe Checkout to Purchase Products in Next.js with Stripe @stripe/stripe-js Cl',
+            slug:
+              'stripe-integrate-stripe-checkout-to-purchase-products-in-next-js-with-stripe-stripe-stripe-js-cl',
             path:
               '/lessons/stripe-integrate-stripe-checkout-to-purchase-products-in-next-js-with-stripe-stripe-stripe-js-cl',
             image:
@@ -154,6 +214,7 @@ const projects: ProjectProps[] = [
       {
         type: 'playlist',
         title: 'Manage Shopping Cart State',
+        slug: 'manage-shopping-cart-state',
         image:
           'https://res.cloudinary.com/dg3gyk0gu/image/upload/v1608205688/next.egghead.io/pages/projects/create-an-ecommerce-store-with-next-js-and-stripe-checkout/ecommerce-stripe-icon-1.png',
         items: [
@@ -161,6 +222,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Create a Shopping Cart with the useState React Hook to Manage Product Quantity and Total',
+            slug:
+              'react-create-a-shopping-cart-with-the-usestate-react-hook-to-manage-product-quantity-and-total',
             path:
               '/lessons/react-create-a-shopping-cart-with-the-usestate-react-hook-to-manage-product-quantity-and-total',
             image:
@@ -169,6 +232,7 @@ const projects: ProjectProps[] = [
           {
             type: 'video',
             title: 'Create a Custom React Hook to Manage Cart State',
+            slug: 'react-create-a-custom-react-hook-to-manage-cart-state',
             path:
               '/lessons/react-create-a-custom-react-hook-to-manage-cart-state',
             image:
@@ -178,6 +242,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Use the React Context API to Globally Manage Cart State in a Next.js App',
+            slug:
+              'react-use-the-react-context-api-to-globally-manage-cart-state-in-a-next-js-app',
             path:
               '/lessons/react-use-the-react-context-api-to-globally-manage-cart-state-in-a-next-js-app',
             image:
@@ -187,6 +253,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Store and Load Cart State from Local Storage to Persist Cart Data When Reloading the Page',
+            slug:
+              'react-store-and-load-cart-state-from-local-storage-to-persist-cart-data-when-reloading-the-page',
             path:
               '/lessons/react-store-and-load-cart-state-from-local-storage-to-persist-cart-data-when-reloading-the-page',
             image:
@@ -196,6 +264,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Use Next.js Dynamic Routes to Create Product Pages for an Online Store',
+            slug:
+              'next-js-use-next-js-dynamic-routes-to-create-product-pages-for-an-online-store',
             path:
               '/lessons/next-js-use-next-js-dynamic-routes-to-create-product-pages-for-an-online-store',
             image:
@@ -205,6 +275,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Create a Shopping Cart Page to Manage Products to Purchase in a Next.js App',
+            slug:
+              'next-js-create-a-shopping-cart-page-to-manage-products-to-purchase-in-a-next-js-app',
             path:
               '/lessons/next-js-create-a-shopping-cart-page-to-manage-products-to-purchase-in-a-next-js-app',
             image:
@@ -214,6 +286,8 @@ const projects: ProjectProps[] = [
             type: 'video',
             title:
               'Add a Quantity Input to the Cart Page to Add or Remove Items from a Shopping Cart in Next',
+            slug:
+              'react-add-a-quantity-input-to-the-cart-page-to-add-or-remove-items-from-a-shopping-cart-in-next',
             path:
               '/lessons/react-add-a-quantity-input-to-the-cart-page-to-add-or-remove-items-from-a-shopping-cart-in-next',
             image:
