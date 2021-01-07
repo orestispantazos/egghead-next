@@ -8,6 +8,7 @@ import EmailForm from 'components/pricing/email-form'
 import emailIsValid from 'utils/email-is-valid'
 import {track} from 'utils/analytics'
 import {usePricing, Prices} from 'hooks/use-pricing'
+import useLastResource from 'hooks/use-last-resource'
 
 type PricingProps = {
   annualPrice: {
@@ -23,6 +24,7 @@ const Pricing: FunctionComponent<PricingProps> = () => {
   const [needsEmail, setNeedsEmail] = React.useState(false)
   const {viewer} = useViewer()
   const {prices, pricesLoading} = usePricing()
+  const {lastResource} = useLastResource()
 
   const onClickCheckout = async (event: SyntheticEvent) => {
     event.preventDefault()
@@ -45,6 +47,7 @@ const Pricing: FunctionComponent<PricingProps> = () => {
         annualPrice.price_id,
         viewer.email,
         viewer.subscription?.stripe_subscription_id,
+        lastResource,
       )
     } else {
       await track('checkout: get email', {
@@ -117,7 +120,10 @@ const Pricing: FunctionComponent<PricingProps> = () => {
           </SelectPlan>
         )}
         {prices.annualPrice && needsEmail && (
-          <EmailForm priceId={prices.annualPrice.price_id} />
+          <EmailForm
+            priceId={prices.annualPrice.price_id}
+            lastResource={lastResource}
+          />
         )}
       </div>
     </>

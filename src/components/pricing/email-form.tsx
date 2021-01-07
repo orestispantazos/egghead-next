@@ -12,9 +12,13 @@ const loginSchema = yup.object().shape({
 
 type EmailFormProps = {
   priceId: string
+  lastResource?: object
 }
 
-const EmailForm: React.FunctionComponent<EmailFormProps> = ({priceId}) => {
+const EmailForm: React.FunctionComponent<EmailFormProps> = ({
+  priceId,
+  lastResource,
+}) => {
   const [isSubmitted, setIsSubmitted] = React.useState(false)
   const [isError, setIsError] = React.useState<boolean | string>(false)
 
@@ -33,7 +37,7 @@ const EmailForm: React.FunctionComponent<EmailFormProps> = ({priceId}) => {
     } else {
       setIsError(false)
       track('checkout: redirect to stripe', {priceId}).then(() =>
-        stripeCheckoutRedirect(priceId, email, stripeCustomerId),
+        stripeCheckoutRedirect(priceId, email, stripeCustomerId, lastResource),
       )
     }
   }
